@@ -1,0 +1,160 @@
+/* Kalima AI Multilingual — frontend switcher */
+
+.kalima-switcher {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px;
+	align-items: center;
+}
+
+.kalima-switcher__label {
+	margin-inline-end: 8px;
+	font-weight: 600;
+}
+
+.kalima-switcher__item {
+	margin: 0;
+	padding: 0;
+}
+
+.kalima-switcher__link {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	padding: 4px 9px;
+	border: 1px solid currentColor;
+	border-radius: 4px;
+	text-decoration: none;
+	opacity: .72;
+	transition: opacity .15s ease, background-color .15s ease;
+}
+
+.kalima-switcher__link:hover,
+.kalima-switcher__link:focus {
+	opacity: 1;
+	background: rgba(127, 127, 127, .12);
+}
+
+.kalima-switcher__item.is-current .kalima-switcher__link {
+	opacity: 1;
+	font-weight: 700;
+	background: rgba(127, 127, 127, .18);
+}
+
+.kalima-switcher__flag {
+	font-size: 1.15em;
+	line-height: 1;
+}
+
+/* Stacked variant for narrow columns. */
+.kalima-switcher--list {
+	flex-direction: column;
+	align-items: stretch;
+}
+
+.kalima-switcher--list .kalima-switcher__link {
+	justify-content: flex-start;
+	width: 100%;
+}
+
+/* Right-to-left languages flip the whole bar. */
+.rtl-lang .kalima-switcher {
+	flex-direction: row-reverse;
+}
+
+/* ---------------------------------------------------------------------
+ * Inside a menu or a widget area: a horizontal run of chips that inherits
+ * the host's type instead of imposing its own.
+ * ------------------------------------------------------------------ */
+.kalima-menu-switcher {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	align-items: center;
+}
+
+.kalima-switcher--inline {
+	flex-direction: row;
+	flex-wrap: wrap;
+	gap: 2px;
+}
+
+.kalima-menu-switcher .kalima-switcher__link,
+.kalima-switcher--inline .kalima-switcher__link {
+	font-size: inherit;
+	line-height: inherit;
+	border-color: transparent;
+	padding: 5px 8px;
+	opacity: .8;
+}
+
+.kalima-menu-switcher .kalima-switcher__link:hover,
+.kalima-menu-switcher .kalima-switcher__link:focus,
+.kalima-switcher--inline .kalima-switcher__link:hover,
+.kalima-switcher--inline .kalima-switcher__link:focus {
+	border-color: currentColor;
+	opacity: 1;
+}
+
+/* ---------------------------------------------------------------------
+ * Top bar — a full-width strip that sits above the theme header.
+ * ------------------------------------------------------------------ */
+.kalima-topbar {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 16px;
+	width: 100%;
+	margin: 0;
+	padding: 7px 18px;
+	background: #1b1b1b;
+	color: #fff;
+	font-size: 13px;
+	line-height: 1;
+}
+
+.rtl-lang .kalima-topbar,
+[dir='rtl'] .kalima-topbar {
+	justify-content: flex-start;
+}
+
+.kalima-switcher--topbar {
+	flex-direction: row;
+	flex-wrap: nowrap;
+	gap: 2px;
+}
+
+.kalima-topbar .kalima-switcher__label {
+	color: #cfcfcf;
+	font-weight: 400;
+	margin-inline-end: 6px;
+}
+
+/* Inside the bar the items read as text, not as bordered chips. */
+.kalima-topbar .kalima-switcher__link {
+	/* The theme colours links itself, so the bar's white would never
+	 * inherit on its own — without this the labels come out dark grey
+	 * on a near-black bar. */
+	color: inherit;
+	border-color: transparent;
+	padding: 4px 9px;
+	border-radius: 3px;
+	opacity: .78;
+}
+
+.kalima-topbar .kalima-switcher__link:hover,
+.kalima-topbar .kalima-switcher__link:focus {
+	border-color: rgba(255, 255, 255, .38);
+	background: rgba(255, 255, 255, .12);
+	opacity: 1;
+}
+
+.kalima-topbar .kalima-switcher__item.is-current .kalima-switcher__link {
+	border-color: rgba(255, 255, 255, .38);
+	background: rgba(255, 255, 255, .17);
+	opacity: 1;
+}

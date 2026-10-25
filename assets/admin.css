@@ -1,0 +1,238 @@
+/* Kalima AI Multilingual — admin styles */
+
+.kalima-wrap .kalima-panel {
+	background: #fff;
+	border: 1px solid #dcdcde;
+	border-radius: 6px;
+	padding: 4px 20px 18px;
+	margin: 20px 0;
+	max-width: 900px;
+}
+
+.kalima-wrap .kalima-panel h2 {
+	padding-top: 16px;
+}
+
+/* Language picker cards */
+.kalima-lang-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+	gap: 10px;
+	margin-top: 6px;
+}
+
+.kalima-lang-card {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	border: 1px solid #dcdcde;
+	border-radius: 6px;
+	padding: 10px 12px;
+	cursor: pointer;
+	transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+.kalima-lang-card:hover {
+	border-color: #2271b1;
+}
+
+.kalima-lang-card input {
+	margin-right: 6px;
+}
+
+.kalima-lang-card__flag {
+	font-size: 20px;
+	line-height: 1.2;
+}
+
+.kalima-lang-card__name {
+	font-weight: 600;
+}
+
+.kalima-lang-card__meta {
+	color: #646970;
+	font-size: 11px;
+	text-transform: uppercase;
+	letter-spacing: .03em;
+}
+
+/* Order arrows — set the order visitors see the languages in */
+.kalima-lang-card__move {
+	display: flex;
+	gap: 4px;
+	justify-content: flex-end;
+	margin-bottom: 4px;
+}
+
+.kalima-move {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 24px;
+	height: 20px;
+	margin: 0;
+	padding: 0;
+	border: 1px solid #dcdcde;
+	border-radius: 4px;
+	background: #fff;
+	color: #50575e;
+	font-size: 9px;
+	line-height: 1;
+	cursor: pointer;
+}
+
+.kalima-move:hover:not(:disabled) {
+	border-color: #2271b1;
+	color: #2271b1;
+}
+
+.kalima-move:focus {
+	outline: 2px solid #2271b1;
+	outline-offset: 1px;
+}
+
+.kalima-move:disabled {
+	opacity: .3;
+	cursor: default;
+}
+
+/* The source language is locked on, and looks like it */
+.kalima-lang-card.is-source {
+	border-color: #2271b1;
+	background: #f0f6fc;
+}
+
+.kalima-lang-card.is-source input {
+	cursor: default;
+}
+
+.kalima-lang-toggle {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	margin-right: 16px;
+	font-weight: 400;
+}
+
+/* Status badges in list tables */
+.kalima-badge {
+	display: inline-block;
+	min-width: 34px;
+	margin: 1px 2px;
+	padding: 2px 7px;
+	border-radius: 3px;
+	border: 1px solid transparent;
+	font-size: 11px;
+	font-weight: 600;
+	line-height: 1.6;
+	text-align: center;
+	text-decoration: none;
+	cursor: default;
+	background: #f0f0f1;
+	color: #50575e;
+}
+
+.kalima-badge--source {
+	background: #e7f0f7;
+	border-color: #c3d9ec;
+	color: #1d5c8f;
+	font-weight: 400;
+	font-style: italic;
+}
+
+.kalima-badge--exists {
+	background: #edfaef;
+	border-color: #b8e0bf;
+	color: #1a7f37;
+	cursor: pointer;
+}
+
+.kalima-badge--exists:hover {
+	background: #d7f3dc;
+}
+
+.kalima-badge--missing {
+	background: #fff;
+	border-color: #d63638;
+	color: #d63638;
+	cursor: pointer;
+}
+
+.kalima-badge--missing:hover {
+	background: #d63638;
+	color: #fff;
+}
+
+.kalima-badge--busy {
+	background: #fcf0c4;
+	border-color: #dba617;
+	color: #7a5c00;
+}
+
+/* Test connection result */
+.kalima-test-result {
+	margin-left: 10px;
+	font-weight: 600;
+}
+
+.kalima-test-result.is-ok {
+	color: #00a32a;
+}
+
+.kalima-test-result.is-bad {
+	color: #d63638;
+}
+
+/* Progress */
+.kalima-progress {
+	margin-top: 16px;
+}
+
+.kalima-progress__bar {
+	height: 14px;
+	background: #f0f0f1;
+	border-radius: 7px;
+	overflow: hidden;
+	border: 1px solid #dcdcde;
+}
+
+.kalima-progress__bar span {
+	display: block;
+	height: 100%;
+	width: 0;
+	background: linear-gradient(90deg, #2271b1, #135e96);
+	transition: width .3s ease;
+}
+
+.kalima-status {
+	margin: 10px 0 6px;
+	font-weight: 600;
+}
+
+.kalima-log {
+	max-height: 260px;
+	overflow-y: auto;
+	background: #f6f7f7;
+	border: 1px solid #dcdcde;
+	border-radius: 4px;
+	padding: 10px 10px 10px 30px;
+	margin: 0;
+	font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+	font-size: 12px;
+}
+
+.kalima-log li {
+	margin: 2px 0;
+}
+
+.kalima-log .is-ok {
+	color: #1a7f37;
+}
+
+.kalima-log .is-bad {
+	color: #d63638;
+}
+
+.kalima-log .is-skip {
+	color: #646970;
+}
