@@ -1,0 +1,15 @@
+{
+  "name": "Kalima AI Multilingual",
+  "slug": "kalima",
+  "version": "1.2.0",
+  "author": "Magdi Taha - DeMug",
+  "download_url": "https://github.com/ferfesh/kalima/releases/download/v1.2.0/kalima-1.2.0.zip",
+  "requires": "6.0",
+  "tested": "7.1",
+  "requires_php": "7.4",
+  "last_updated": "2026-10-25 19:33:46",
+  "sections": {
+    "description": "Kalima AI Multilingual makes a WordPress site multilingual without any external subscription. Every language version of a piece of content is a real WordPress object - a real post, a real term - linked to the others by a shared translation-group id. AI translation from Gemini, OpenAI, DeepSeek, Anthropic Claude or DeepL, with a built-in Mock provider to prove the pipeline before spending a cent.",
+    "changelog": "= 1.2.0 =\n* Improved: the globe icon now prints the theme''s real wireframe earth glyph (U+E94A, .xts-i-global) instead of the interim translate symbol that rendered nothing in the theme''s icon font.\n* Improved: in globe place the strip is moved directly AFTER the first visible header cart, and a CSS order rule pins that visual order even if a late theme pass reshuffles the cart node.\n* Fixed: the language strip no longer flashes above the header on first paint - a body-child-only hide rule ships in the head and stops matching the moment the strip reaches its header place.\n* Added: automatic update checks from the plugin''s own GitHub repository (Plugin Update Checker library, bundled). New releases show up on the Plugins screen exactly like a plugin from the official directory."
+  }
+}
