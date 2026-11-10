@@ -108,21 +108,24 @@ class KALIMA_Topbar {
 		if ( ! empty( $this->kalima->get( 'tb_show_lang', 1 ) ) ) {
 			$group = $this->language_group( $globe );
 			if ( $group ) {
-				$groups[] = $group;
+				$group['type'] = 'language';
+				$groups[]      = $group;
 			}
 		}
 
 		if ( ! empty( $this->kalima->get( 'tb_show_currency', 1 ) ) ) {
 			$group = $this->currency_group( $globe );
 			if ( $group ) {
-				$groups[] = $group;
+				$group['type'] = 'currency';
+				$groups[]      = $group;
 			}
 		}
 
 		if ( ! empty( $this->kalima->get( 'tb_show_country', 1 ) ) ) {
 			$group = $this->country_group( $globe );
 			if ( $group ) {
-				$groups[] = $group;
+				$group['type'] = 'country';
+				$groups[]      = $group;
 			}
 		}
 
@@ -314,29 +317,92 @@ class KALIMA_Topbar {
 	}
 
 	/**
-	 * One icon trigger with the groups stacked in its hover dropdown - the
-	 * same menu markup as the top bar place, only the trigger carries the
-	 * theme's own translate glyph instead of a text label, and every group
-	 * lists all its values (the icon carries the state, not a word).
+	 * One icon trigger with a Shein-style panel in its hover dropdown: a
+	 * "Currency" heading over a bordered listbox that shows only the current
+	 * currency until it is clicked open, a separator, then the language as a
+	 * single centered link that opens the language list. Every value stays a
+	 * real link, so the switch works without JavaScript - the script only
+	 * folds the two lists open and shut.
 	 *
-	 * @param array $groups Groups of dropdown items.
+	 * @param array $groups Groups of trigger + dropdown items.
 	 * @return string
 	 */
 	private function globe_markup( $groups ) {
-		$html = '<div class="wd-header-nav wd-header-secondary-nav itn-kalima-globe-wrap">'
-			. '<ul class="menu wd-nav wd-nav-header wd-nav-secondary wd-style-default itn-kalima-globe-nav">';
-		$html .= '<li class="menu-item menu-item-has-children wd-event-hover itn-kalima-globe-item">';
-		$html .= '<a href="' . esc_url( $this->same_url() ) . '" class="woodmart-nav-link itn-kalima-globe-link"'
-			. ' aria-label="' . esc_attr__( 'Language and currency', 'kalima' ) . '">'
-			. '<span class="itn-kalima-globe"></span></a>';
-		$html .= '<div class="wd-dropdown-menu wd-dropdown wd-design-default sub-menu-dropdown color-scheme-light">'
-			. '<div class="container">';
+		$currency = null;
+		$language = null;
+		$plain    = array();
 
 		foreach ( $groups as $group ) {
 			if ( empty( $group['items'] ) ) {
 				continue;
 			}
 
+			$type = isset( $group['type'] ) ? $group['type'] : '';
+
+			if ( 'currency' === $type ) {
+				$currency = $group;
+			} elseif ( 'language' === $type ) {
+				$language = $group;
+			} else {
+				$plain[] = $group;
+			}
+		}
+
+		if ( ! $currency && ! $language && ! $plain ) {
+			return '';
+		}
+
+		$html = '<div class="wd-header-nav wd-header-secondary-nav itn-kalima-globe-wrap">'
+			. '<ul class="menu wd-nav wd-nav-header wd-nav-secondary wd-style-default itn-kalima-globe-nav">';
+		$html .= '<li class="menu-item menu-item-has-children wd-event-hover itn-kalima-globe-item">';
+		$html .= '<a href="' . esc_url( $this->same_url() ) . '" class="woodmart-nav-link itn-kalima-globe-link"'
+			. ' aria-label="' . esc_attr__( 'Language and currency', 'kalima' ) . '">'
+			. '<span class="itn-kalima-globe"></span></a>';
+		$html .= '<div class="wd-dropdown-menu wd-dropdown wd-design-default sub-menu-dropdown color-scheme-light itn-kalima-pop">'
+			. '<div class="container">';
+
+		if ( $currency ) {
+			$html .= '<div class="itn-kalima-pop__sec">'
+				. '<span class="itn-kalima-pop__label">' . esc_html__( 'Currency', 'kalima' ) . '</span>'
+				. '<div class="itn-kalima-box">'
+				. '<button type="button" class="itn-kalima-box__cur" aria-expanded="false">'
+				. '<span class="itn-kalima-box__val">' . esc_html( $currency['trigger'] ) . '</span>'
+				. '<span class="itn-kalima-box__chev" aria-hidden="true"></span>'
+				. '</button>'
+				. '<ul class="itn-kalima-box__list">';
+
+			foreach ( $currency['items'] as $item ) {
+				$html .= $this->globe_list_item( $item, $currency['trigger'] );
+			}
+
+			$html .= '</ul></div></div>';
+		}
+
+		if ( $currency && $language ) {
+			$html .= '<hr class="itn-kalima-pop__sep">';
+		}
+
+		if ( $language ) {
+			$html .= '<div class="itn-kalima-pop__sec itn-kalima-pop__sec--lang">'
+				. '<button type="button" class="itn-kalima-langlink" aria-expanded="false">'
+				. '<span class="itn-kalima-langlink__txt">' . esc_html( $language['trigger'] ) . '</span>'
+				. '<span class="itn-kalima-box__chev" aria-hidden="true"></span>'
+				. '</button>'
+				. '<ul class="itn-kalima-langlist">';
+
+			foreach ( $language['items'] as $item ) {
+				$html .= $this->globe_list_item( $item, $language['trigger'] );
+			}
+
+			$html .= '</ul></div>';
+		}
+
+		/*
+		 * Any group without its own panel (country, or a future one) keeps
+		 * the plain theme list it always had - nothing breaks when the
+		 * settings switch a group off.
+		 */
+		foreach ( $plain as $group ) {
 			$html .= '<ul class="wd-sub-menu sub-menu">';
 
 			foreach ( $group['items'] as $item ) {
@@ -350,6 +416,22 @@ class KALIMA_Topbar {
 		$html .= '</div></div></li></ul></div>';
 
 		return $html;
+	}
+
+	/**
+	 * One row of a globe panel list - the current value is flagged so the
+	 * open list can mark it.
+	 *
+	 * @param array  $item     Row with url and text.
+	 * @param string $trigger  Current value text (same format as item text).
+	 * @return string
+	 */
+	private function globe_list_item( $item, $trigger ) {
+		$is_current = ( $item['text'] === $trigger );
+
+		return '<li class="menu-item' . ( $is_current ? ' is-current' : '' ) . '">'
+			. '<a href="' . esc_url( $item['url'] ) . '" class="woodmart-nav-link">'
+			. '<span class="nav-link-text">' . esc_html( $item['text'] ) . '</span></a></li>';
 	}
 
 	/**
@@ -394,7 +476,33 @@ class KALIMA_Topbar {
 				. '.itn-kalima-globe{font-family:"itn-kalima-icons";font-weight:400;font-style:normal;font-size:18px;line-height:1;display:inline-block;vertical-align:middle;}'
 				. '.itn-kalima-globe::before{content:"\e94a";}'
 				. '.whb-column .kalima-topbar > .wd-header-nav{order:9;}'
-				. '.whb-column .kalima-topbar{order:9;}';
+				. '.whb-column .kalima-topbar{order:9;}'
+
+				/*
+				 * The Shein-style panel inside the hover dropdown: the
+				 * "Currency" heading over a bordered listbox that shows only
+				 * the current value until clicked open, a separator, then the
+				 * language as one centered link that opens its list. The
+				 * dropdown keeps the theme's own colours and padding - only
+				 * the rows the plugin adds are styled here.
+				 */
+				. '.itn-kalima-pop__label{display:block;margin-bottom:8px;font-size:12px;line-height:1.2;letter-spacing:.04em;color:rgba(255,255,255,.55);}'
+				. '.itn-kalima-box{border:1px solid rgba(255,255,255,.35);border-radius:6px;background:rgba(255,255,255,.04);overflow:hidden;}'
+				. '.itn-kalima-box__cur{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;margin:0;padding:10px 12px;border:0;background:none;color:rgba(255,255,255,.9);font-family:inherit;font-size:14px;line-height:1.3;cursor:pointer;text-align:left;}'
+				. '.itn-kalima-box__cur:hover{color:#fff;}'
+				. '.itn-kalima-box__chev{flex:0 0 auto;width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-top:5px solid rgba(255,255,255,.6);transition:transform .15s ease;}'
+				. '[aria-expanded="true"].itn-kalima-box__cur .itn-kalima-box__chev,[aria-expanded="true"].itn-kalima-langlink .itn-kalima-box__chev{transform:rotate(180deg);}'
+				. '.itn-kalima-box__list,.itn-kalima-langlist{display:none;margin:0;padding:0;list-style:none;}'
+				. '.itn-kalima-box__list.is-open,.itn-kalima-langlist.is-open{display:block;}'
+				. '.itn-kalima-box__list{border-top:1px solid rgba(255,255,255,.18);}'
+				. '.itn-kalima-box__list a.woodmart-nav-link,.itn-kalima-langlist a.woodmart-nav-link{display:flex;align-items:center;gap:8px;padding:8px 12px;color:rgba(255,255,255,.6);font-size:14px;line-height:1.3;text-decoration:none;transition:color .15s ease,background .15s ease;}'
+				. '.itn-kalima-box__list a.woodmart-nav-link:hover,.itn-kalima-langlist a.woodmart-nav-link:hover{color:#fff;background:rgba(255,255,255,.08);}'
+				. '.itn-kalima-box__list .is-current>a.woodmart-nav-link,.itn-kalima-langlist .is-current>a.woodmart-nav-link{color:rgba(255,255,255,.95);}'
+				. '.itn-kalima-box__list .is-current>a.woodmart-nav-link::after,.itn-kalima-langlist .is-current>a.woodmart-nav-link::after{content:"\2713";margin-left:auto;color:rgba(255,255,255,.7);}'
+				. '.itn-kalima-pop__sep{height:0;margin:14px 0;border:0;border-top:1px solid rgba(255,255,255,.18);}'
+				. '.itn-kalima-langlink{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;margin:0;padding:4px 0;border:0;background:none;color:rgba(255,255,255,.8);font-family:inherit;font-size:14px;line-height:1.3;cursor:pointer;}'
+				. '.itn-kalima-langlink:hover{color:#fff;}'
+				. '.itn-kalima-langlist{margin-top:10px;border:1px solid rgba(255,255,255,.35);border-radius:6px;overflow:hidden;background:rgba(255,255,255,.04);}';
 		}
 
 		wp_add_inline_style( 'kalima-topbar', $css );
@@ -463,6 +571,42 @@ class KALIMA_Topbar {
         if (!a || !a.parentElement || !a.parentElement.classList.contains('menu-item-has-children')) { return; }
         if (a.href === window.location.href) { e.preventDefault(); }
       });
+      if (mode === 'globe') {
+        /*
+         * The two panel lists fold open on click (the values themselves are
+         * real links, so the switch still works with this script missing).
+         * Opening one folds the other shut; leaving the item folds both.
+         */
+        bar.addEventListener('click', function(e){
+          var t = e.target;
+          if (!t || !t.closest) { return; }
+          var pop = t.closest('.itn-kalima-pop');
+          if (!pop) { return; }
+          var cur = t.closest('.itn-kalima-box__cur');
+          var lang = t.closest('.itn-kalima-langlink');
+          if (!cur && !lang) { return; }
+          var list = cur ? pop.querySelector('.itn-kalima-box__list') : pop.querySelector('.itn-kalima-langlist');
+          if (!list) { return; }
+          var willOpen = !list.classList.contains('is-open');
+          var lists = pop.querySelectorAll('.itn-kalima-box__list, .itn-kalima-langlist');
+          for (var i = 0; i < lists.length; i++) { lists[i].classList.remove('is-open'); }
+          var btns = pop.querySelectorAll('.itn-kalima-box__cur, .itn-kalima-langlink');
+          for (var j = 0; j < btns.length; j++) { btns[j].setAttribute('aria-expanded', 'false'); }
+          if (willOpen) {
+            list.classList.add('is-open');
+            (cur || lang).setAttribute('aria-expanded', 'true');
+          }
+        });
+        var globeItem = bar.querySelector('.itn-kalima-globe-item');
+        if (globeItem) {
+          globeItem.addEventListener('mouseleave', function(){
+            var open = globeItem.querySelectorAll('.is-open');
+            for (var i = 0; i < open.length; i++) { open[i].classList.remove('is-open'); }
+            var btns = globeItem.querySelectorAll('[aria-expanded="true"]');
+            for (var j = 0; j < btns.length; j++) { btns[j].setAttribute('aria-expanded', 'false'); }
+          });
+        }
+      }
     } catch (e) {}
   };
   if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', run); } else { run(); }

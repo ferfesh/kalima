@@ -4,7 +4,7 @@ Tags: multilingual, translation, ai, gemini, woocommerce
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.2.0
+Stable tag: 1.2.1
 License: GPL-2.0-or-later
 
 Multi-language publishing with AI translation. Pages, posts, products, categories and menus.
@@ -103,6 +103,14 @@ Uninstall removes only this plugin's options and its two meta keys. It never
 deletes a post or a term, because every translation is real published content.
 
 == Changelog ==
+
+= 1.2.1 =
+* Improved: the globe dropdown is now a Shein-style panel — a "Currency"
+  heading over a bordered listbox that shows only the current currency until
+  it is clicked open, a separator line, then the language as one centered link
+  that opens the language list. The current value carries a check mark in the
+  open lists; the values stay real links, so the switch works without
+  JavaScript (the script only folds the lists open and shut).
 
 = 1.2.0 =
 * Improved: the globe icon now prints the theme's real wireframe earth glyph
