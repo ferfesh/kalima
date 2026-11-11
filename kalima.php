@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Kalima AI Multilingual
  * Description:       Multi-language engine with AI translation. Pages, posts, products, categories and menus. Works like a translation-set system: every language is a real post linked to the others.
- * Version:           1.2.1
+ * Version:           1.2.2
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * Author:            Magdi Taha — DeMug
@@ -15,7 +15,7 @@
 defined( 'KALIMA_PLUGIN_FILE' ) || define( 'KALIMA_PLUGIN_FILE', __FILE__ );
 defined( 'KALIMA_PLUGIN_DIR' ) || define( 'KALIMA_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 defined( 'KALIMA_PLUGIN_URL' ) || define( 'KALIMA_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-defined( 'KALIMA_VERSION' ) || define( 'KALIMA_VERSION', '1.2.1' );
+defined( 'KALIMA_VERSION' ) || define( 'KALIMA_VERSION', '1.2.2' );
 
 /** Short-circuit before anything loads. */
 if ( ! defined( 'ABSPATH' ) ) {

@@ -795,21 +795,33 @@ KALJS;
 			$zones = WC_Shipping_Zones::get_zones();
 
 			foreach ( $zones as $zone ) {
+				if ( empty( $zone['zone_locations'] ) ) {
+					continue;
+				}
+
 				foreach ( $zone['zone_locations'] as $loc ) {
-					if ( 'country' === $loc->type ) {
+					if ( isset( $loc->type, $loc->code ) && 'country' === $loc->type ) {
 						$codes[] = strtoupper( $loc->code );
 					}
 				}
 			}
 
+			/*
+			 * The rest-of-world zone (id 0) is a real zone object here, but
+			 * its rules are read through get_zone_locations() - never assume
+			 * a getter exists, and never let a WooCommerce API difference
+			 * take the whole page down with it.
+			 */
 			$rest = WC_Shipping_Zones::get_zone( 0 );
 
-			foreach ( $rest->get_locations() as $loc ) {
-				if ( 'country' === $loc->type ) {
-					$codes[] = strtoupper( $loc->code );
+			if ( is_object( $rest ) && method_exists( $rest, 'get_zone_locations' ) ) {
+				foreach ( (array) $rest->get_zone_locations() as $loc ) {
+					if ( isset( $loc->type, $loc->code ) && 'country' === $loc->type ) {
+						$codes[] = strtoupper( $loc->code );
+					}
 				}
 			}
-		} catch ( Exception $e ) {
+		} catch ( Throwable $e ) {
 			return array();
 		}
 
