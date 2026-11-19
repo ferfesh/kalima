@@ -4,7 +4,7 @@ Tags: multilingual, translation, ai, gemini, woocommerce
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.2.2
+Stable tag: 1.2.3
 License: GPL-2.0-or-later
 
 Multi-language publishing with AI translation. Pages, posts, products, categories and menus.
@@ -103,6 +103,16 @@ Uninstall removes only this plugin's options and its two meta keys. It never
 deletes a post or a term, because every translation is real published content.
 
 == Changelog ==
+
+= 1.2.3 =
+* Improved: the language trigger in the header now shows the visitor's
+  own country flag beside the language name instead of the language's
+  flag — detected automatically by IP (the country choice cookie, then
+  the Cloudflare header, then the store base country), with the language
+  flag kept only when no country can be determined. The rows in the
+  language list keep their language flags and the current-language
+  marking is unchanged. The globe popup language button follows the
+  same rule.
 
 = 1.2.2 =
 * Fixed: a WooCommerce API difference in the rest-of-world shipping zone

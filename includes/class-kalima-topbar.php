@@ -9,7 +9,9 @@
  * groups can appear, each with the visitor's current value on the trigger and
  * the choices in the dropdown:
  *
- *   - Language  - the Kalima languages, current one on the trigger.
+ *   - Language  - the Kalima languages, current one on the trigger. The
+ *                 flag on the trigger is the visitor's own country (the
+ *                 language keeps its own flag inside the list).
  *   - Currency  - the active multi-currency currencies (WPC Multi Currency
  *                 cookie wpcmc_currency is read and set, so the shop prices
  *                 follow immediately). Defaults to the visitor's country.
@@ -175,6 +177,22 @@ class KALIMA_Topbar {
 			$flag    = $first['flag'];
 		}
 
+		/*
+		 * The rows in the list keep their own language flags - each one
+		 * has to say which language it is. The trigger is the header icon
+		 * though, and it changes to the flag of the country the visitor
+		 * opens the site from: the choice cookie, then the Cloudflare
+		 * detection, then the store base - the same current_country()
+		 * chain the country group uses. Only when no code comes back at
+		 * all does the language's own flag stay on the trigger.
+		 */
+		$current_text = trim( $flag . ' ' . $trigger );
+		$country_flag = $this->flag_emoji( $this->current_country( $this->visitor_country() ) );
+
+		if ( '' !== $country_flag ) {
+			$flag = $country_flag;
+		}
+
 		$items = array();
 
 		foreach ( $all as $code => $data ) {
@@ -192,9 +210,10 @@ class KALIMA_Topbar {
 		}
 
 		return array(
-			'trigger' => trim( $flag . ' ' . $trigger ),
-			'href'    => $url ? : $this->same_url(),
-			'items'   => $items,
+			'trigger'      => trim( $flag . ' ' . $trigger ),
+			'current_text' => $current_text,
+			'href'         => $url ? : $this->same_url(),
+			'items'        => $items,
 		);
 	}
 
@@ -390,8 +409,15 @@ class KALIMA_Topbar {
 				. '</button>'
 				. '<ul class="itn-kalima-langlist">';
 
+			/*
+			 * The trigger flag is the visitor's country now, so the list
+			 * marks the current row by the language text it was built
+			 * with instead of by the trigger string.
+			 */
+			$current = ! empty( $language['current_text'] ) ? $language['current_text'] : $language['trigger'];
+
 			foreach ( $language['items'] as $item ) {
-				$html .= $this->globe_list_item( $item, $language['trigger'] );
+				$html .= $this->globe_list_item( $item, $current );
 			}
 
 			$html .= '</ul></div>';
